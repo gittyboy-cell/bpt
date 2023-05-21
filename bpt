@@ -1,0 +1,14 @@
+#!/bin/sh
+if [ $1 == "local" ]; then
+   read -p "enter full path to file: " filelocation; filename=${filelocation##*/}
+   temp=$(mktemp -dp /tmp bpt-XXXXXX)
+else
+read -p "enter url to file: " filelocation; filename=${filelocation##*/}
+temp=$(mktemp -dp /tmp bpt-XXXXXX)
+curlarg="-o $temp/$filename $filelocation"
+curl $curlarg
+fi
+cd $temp
+ar xv $filelocation
+tar -xf data.tar.xz -C /
+rm -rfv $temp
